@@ -2,7 +2,8 @@ import os
 import time
 import aiml
 from slackclient import SlackClient
-
+import logging
+logging.basicConfig(level=10)
 
 # starterbot's ID as an environment variable
 BOT_ID = str(os.environ.get("BOT_ID"))
@@ -59,11 +60,11 @@ def parse_slack_output(slack_rtm_output):
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
     if slack_client.rtm_connect():
-        print("Botwot connected and running!")
+        logging.info("Botwot connected and running!")
         while True:
             command, channel = parse_slack_output(slack_client.rtm_read())
             if command and channel:
                 handle_command(command, channel)
             time.sleep(READ_WEBSOCKET_DELAY)
     else:
-        print("Connection failed. Invalid Slack token or bot ID?")
+        logging.error("Connection failed. Invalid Slack token or bot ID?")
